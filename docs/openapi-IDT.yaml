@@ -1,1 +1,2522 @@
 
+swagger: '2.0'
+info:
+  title: API Plataforma IDT
+  version: ''
+  description: >-
+    <b>E-mail:</b> developers@plataformaidt.com.br
+
+
+    Descubra todas as funcionalidades da nossa plataforma para que você possa
+    criar uma operação de crédito de forma simples, segura e sustentável.
+
+    <br><br><b>Postman Collection:</b> <a
+    href="https://s3.us-east-1.amazonaws.com/public.plataformaidt.com.br/IDT+API+Collection+V1.5.postman_collection.json">Download</a>
+
+
+    <b> URL Playground: </b> https://api.play.plataformaidt.com.br/v1
+
+
+    <b> URL Production: </b> https://api.plataformaidt.io/v1
+
+    <br><br><br>
+
+    <b> IMPORTANTE: </b> O acesso aos recursos da API Plataforma IDT podem
+    variar conforme as regras de negócio da integração e as permissões da
+    credencial utilizada.
+host: api.play.plataformaidt.com.br
+basePath: /v1
+schemes:
+  - https
+paths:
+  /movements/{category}:
+    post:
+      responses:
+        '201':
+          description: Created. Movimento foi criado com sucesso
+          headers: {}
+          examples: {}
+        '400':
+          description: >-
+            Bad Request. Pode ocorrer quando o envio dos dados está
+            inconsistente
+          headers: {}
+          examples: {}
+        '401':
+          description: Os dados de autenticação do usuário não são válidos
+          headers: {}
+          examples: {}
+        '403':
+          description: O usuário não está autorizado a realizar essa operação
+          headers: {}
+          examples: {}
+      summary: Criar movimento
+      operationId: Criar movimento
+      description: >-
+        Realiza a criação de um movimento financeiro em uma operação de crédito.
+
+
+        Protocolo de segurança e autenticação -
+        <b>[oAuth2](reference/#oauth2)</b>
+
+
+        <b>IMPORTANTE:</b> O perfil de uso <b>"SACADO"</b> deve utilizar o
+        objeto <i>`from`</i> para informar os dados do participante
+        <b>"Sacado"</b> e o objeto <i>`to`</i> para informar os dados do
+        participante <b>"Fornecedor"</b>, enquanto o perfil de uso
+        <b>"FORNECEDOR"</b> deve utilizar o objeto <i>`from`</i> para informar
+        os dados do participante <b>"Fornecedor"</b> e o objeto <i>`to`</i> para
+        informar os dados do participante <b>"Sacado"</b>.
+      tags:
+        - Criar movimento
+      parameters:
+        - name: category
+          in: path
+          description: '**Path parameter.** Tipo de movimento a ser criado.'
+          required: true
+          x-example: assets
+          type: string
+        - name: origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            required:
+              - type
+              - from
+              - to
+              - data
+              - type
+              - from
+              - to
+              - data
+            properties:
+              type:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: assets
+                    description: 'Identificador do tipo de movimento. Exemplo:'
+                  sub_type:
+                    type: string
+                    example: invoices
+                    description: 'Subtipo do movimento. Exemplo:'
+                  title:
+                    type: string
+                    example: Fatura
+                    description: 'Informação para apresentação. Exemplo:'
+                  external_type:
+                    type: string
+                    example: Fatura
+                    description: 'Tipo de movimento no cliente. Exemplo:'
+              from:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: FORNECEDOR TESTE
+                    description: 'Nome do participante. Exemplo:'
+                  data:
+                    type: object
+                    properties:
+                      tax_number:
+                        type: string
+                        example: '80988977000106'
+                        description: 'Número de identificação. Exemplo:'
+                      type:
+                        type: string
+                        example: seller
+                        description: 'Tipo do participante. Exemplo:'
+                description: Participante de origem
+              to:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: SACADO TESTE LTDA
+                    description: 'Nome do participante. Exemplo:'
+                  data:
+                    type: object
+                    properties:
+                      tax_number:
+                        type: string
+                        example: '04882084000195'
+                        description: 'Número de identificação. Exemplo:'
+                      type:
+                        type: string
+                        example: buyer
+                        description: 'Tipo do participante. Exemplo:'
+                description: Participante de destino
+              data:
+                type: object
+                required:
+                  - status
+                properties:
+                  amount:
+                    type: string
+                    example: '2100.50'
+                    description: 'Valor do Ativo. Exemplo:'
+                  date:
+                    type: string
+                    example: '2023-07-01'
+                    description: 'Data de emissão. Formato: AAAA-MM-DD. Exemplo:'
+                  external_id:
+                    type: string
+                    example: '211'
+                    description: 'Número do ativo. Exemplo:'
+                  post_date:
+                    type: string
+                    example: '2023-09-25'
+                    description: 'Data de vencimento. Formato: AAAA-MM-DD. Exemplo:'
+                  number:
+                    type: string
+                    example: '211'
+                    description: 'Número do ativo. Exemplo:'
+                  nfe_key:
+                    type: string
+                    example: '42230707549194000128550030000879961586032907'
+                    description: >-
+                      Número da chave de acesso da NF-e. Campo não obrigatório.
+                      Exemplo:
+                  status:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: Disponível
+                        description: 'Status. Exemplo:'
+                      category:
+                        type: string
+                        example: created
+                        description: 'Status de criação. Exemplo:'
+                    description: Status do ativo
+                description: Dados do Ativo
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+    get:
+      responses:
+        '200':
+          description: Success. Busca dos movimentos retornada com sucesso
+          headers: {}
+          examples:
+            application/json:
+              page:
+                size: 50
+                number: 0
+                total_pages: 1
+                total_elements: 1
+              content:
+                - id: asset
+                  type:
+                    id: assets
+                    sub_type: invoices
+                    external_type: Fatura
+                    title: Fatura
+                  data:
+                    id: 2465175000-#90335456000103#100015
+                    status:
+                      name: Disponivel
+                      category: created
+                    external_id: '100015'
+                    date: '2023-09-19'
+                    amount: '2540.45'
+                    updated_at: '2023-09-20T17:39:23.799176'
+                    created_at: '2023-09-20T17:39:22.917647'
+                    post_date: '2023-10-18'
+                    nfe_key: '42230707549194000128550030000879961586032907'
+                    number: '100015'
+                  from:
+                    name: FORNECEDOR EXEMPLO
+                    data:
+                      type: seller
+                      tax_number: 2465175000-
+                  to:
+                    name: SACADO EXEMPLO
+                    data:
+                      type: buyer
+                      tax_number: '90335456000103'
+                  parent: {}
+          schema:
+            type: object
+            properties:
+              page:
+                type: object
+                properties:
+                  size:
+                    type: number
+                    description: Tamanho da página
+                  number:
+                    type: number
+                    description: Número da página
+                  total_elements:
+                    type: number
+                    description: Total de elementos
+                  total_pages:
+                    type: number
+                    description: Total de páginas
+              content:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  type:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Identificador do tipo de movimento
+                      sub_type:
+                        type: string
+                        description: Subtipo do movimento.
+                      title:
+                        type: string
+                        description: Informação para apresentação
+                      external_type:
+                        type: string
+                        description: Tipo de movimento no cliente
+                  from:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Nome do participante
+                      data:
+                        type: object
+                        properties:
+                          tax_number:
+                            type: string
+                            description: Número de identificação
+                          type:
+                            type: string
+                            description: Tipo do participante
+                    description: Participante de origem
+                  to:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Nome do participante
+                      data:
+                        type: object
+                        properties:
+                          tax_number:
+                            type: string
+                            description: Número de identificação
+                          type:
+                            type: string
+                            description: Tipo do participante
+                    description: Participante de destino
+                  data:
+                    type: object
+                    properties:
+                      amount:
+                        type: string
+                        description: Valor do Ativo
+                      date:
+                        type: string
+                        description: Data de emissão
+                      external_id:
+                        type: string
+                        description: Número do ativo
+                      post_date:
+                        type: string
+                        description: Data de vencimento
+                      number:
+                        type: string
+                        description: Número do ativo
+                      nfe_key:
+                        type: string
+                        description: Número da chave de acesso da NF-e
+                    description: Dados do Ativo
+        '400':
+          description: >-
+            Bad Request. Pode ocorrer quando o envio dos dados está
+            inconsistente
+          headers: {}
+          examples: {}
+        '401':
+          description: Os dados de autenticação do usuário não são válidos
+          headers: {}
+          examples: {}
+        '403':
+          description: O usuário não está autorizado a realizar essa operação
+          headers: {}
+          examples: {}
+      summary: Buscar movimento
+      operationId: Buscar movimento
+      description: >-
+        Realiza a busca de movimentos financeiros por categoria.
+
+
+        Protocolo de segurança e autenticação -
+        <b>[oAuth2](reference/#oauth2)</b>
+      tags:
+        - Buscar movimento
+      parameters:
+        - name: category
+          in: path
+          description: |
+            **Path parameter.** Tipo de movimento a ser buscado.
+            Valores possíveis: `assets`, `receipts`, `trades`, `offers`
+          required: true
+          x-example: assets
+          type: string
+        - name: page
+          in: body
+          description: '**Query parameter.** Página que deseja consultar (começando por 0)'
+          required: true
+          x-example: '0'
+          schema:
+            type: number
+        - name: size
+          in: body
+          description: '**Query parameter.** Quantidade de itens por página'
+          required: true
+          x-example: '50'
+          schema:
+            type: number
+        - name: start_date
+          in: body
+          description: '**Query parameter.** Data inicial (AAAA-MM-DD)'
+          required: false
+          x-example: '2020-10-10'
+          schema:
+            type: string
+        - name: end_date
+          in: body
+          description: '**Query parameter.** Data final (AAAA-MM-DD)'
+          required: false
+          x-example: '2021-10-10'
+          schema:
+            type: string
+        - name: tax_number
+          in: body
+          description: '**Query parameter.** CPF ou CNPJ envolvido'
+          required: false
+          x-example: '80988977000106'
+          schema:
+            type: string
+        - name: origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+    patch:
+      responses:
+        '202':
+          description: Accepted. Indica que a requisição foi recebida e será processada.
+          headers: {}
+          examples: {}
+        '400':
+          description: >-
+            Bad Request. Pode ocorrer quando o envio dos dados está
+            inconsistente
+          headers: {}
+          examples: {}
+        '401':
+          description: Os dados de autenticação do usuário não são válidos
+          headers: {}
+          examples: {}
+        '403':
+          description: O usuário não está autorizado a realizar essa operação
+          headers: {}
+          examples: {}
+      summary: Aprovar ou reprovar um movimento
+      operationId: Aprovar ou reprovar um movimento
+      description: >-
+        Executa as ações de <b>aprovar</b> ou <b>reprovar</b> um determinado
+        movimento.
+
+
+        O movimento que será <b><i>aprovado</b></i> ou <b><i>reprovado</b></i>
+        sempre estará dentro de outro movimento (chamado de <b><i>movimento
+        pai</b></i>), portanto, tanto o movimento que será alterado, quanto o
+        movimento pai, deverão ser informados no payload da requisição.
+
+
+        Protocolo de segurança e autenticação -
+        <b>[oAuth2](reference/#oauth2)</b>
+      tags:
+        - Aprovar ou reprovar um movimento
+      parameters:
+        - name: category
+          in: path
+          description: >-
+            **Path parameter.** Tipo de movimento a ser Aprovado. Contudo,
+            sempre será aprovado um movimento do tipo <b>offer</b>.
+          required: true
+          x-example: offers
+          type: string
+        - name: origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              action:
+                type: string
+                description: >-
+                  Ação sobre o movimento. Suportados: `approve` ou `reprove`.
+                  Exemplo:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: >-
+                      Identificador do movimento que sofrerá a ação desta
+                      requisição. Exemplo:
+                  movement_action:
+                    type: string
+                    description: >-
+                      Ação sobre o movimento. Use approve, para Aprovado e
+                      reprove para Reprovado. Exemplo:
+                  reason:
+                    type: string
+                    description: >-
+                      Descrição do motivo da reprova. Obrigatório quando é
+                      reprove. Exemplo:
+                  category:
+                    type: string
+                    description: >-
+                      Categoria do movimento que sofrerá a ação desta
+                      requisição. Exemplo:
+                  date:
+                    type: string
+                    description: >-
+                      Data do movimento que sofrerá a ação desta requisição.
+                      Formato: AAAA-MM-DD. Exemplo:
+                  external_id:
+                    type: string
+                    description: >-
+                      Id externo do movimento que sofrerá a ação desta
+                      requisição. Exemplo:
+                  parent:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: 'Identificador do movimento `Pai`. Exemplo:'
+                      category:
+                        type: string
+                        description: 'Categoria do movimento `Pai`. Exemplo:'
+                      date:
+                        type: string
+                        description: 'Data do movimento `Pai`. Formato: AAAA-MM-DD. Exemplo:'
+                      external_id:
+                        type: string
+                        description: 'Id do movimento `Pai`. Exemplo:'
+                    description: Informações do movimento `Pai`.
+                required:
+                  - movement_action
+                  - parent
+                description: Dados do Ativo
+            required:
+              - action
+              - data
+            example:
+              action: reprove
+              data:
+                id: 1vIoiSAQ9tHl7Z11eP6y47EAD12
+                movement_action: reprove
+                reason: Reprovo esta proposta
+                category: offer
+                date: '2021-01-01'
+                external_id: '123456'
+                parent:
+                  id: 2vIoiSAQ9tHl7Z11eP6y47EAD13
+                  category: trade
+                  date: '2021-01-01'
+                  external_id: '789456'
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+  /movements/{category}/search:
+    post:
+      responses:
+        '200':
+          description: >-
+            Success. Lista de movimentos retornada na busca com sucesso (exemplo
+            de um response)
+          headers: {}
+          examples: {}
+        '400':
+          description: >-
+            Bad Request. Pode ocorrer quando o envio dos dados está
+            inconsistente
+          headers: {}
+          examples: {}
+        '401':
+          description: Os dados de autenticação do usuário não são válidos
+          headers: {}
+          examples: {}
+        '403':
+          description: O usuário não está autorizado a realizar essa operação
+          headers: {}
+          examples: {}
+      summary: Filtrar movimento
+      operationId: Filtrar movimento
+      description: >-
+        <b>Filtra movimentos</b> de acordo com os filtros associados ao
+        programa. <b>Importante</b> ressaltar que podem ser declaradas diversas
+        "<b>keys</b>" (<i>parâmetros de busca</i>) dentro do body, <b>aplicando
+        mais de um parâmetro no filtro</b>.
+
+
+        Protocolo de segurança e autenticação -
+        <b>[oAuth2](reference/#oauth2)</b>
+      tags:
+        - Filtrar movimento
+      parameters:
+        - name: category
+          in: path
+          description: >-
+            **Path parameter.** Tipo de movimento a ser buscado. <ul>Suportados:
+            <b>`asset`</b> <b>`receipts`</b> <b>`trades`</b> <b>`offers`</b>
+            </ul>
+          required: true
+          x-example: assets
+          type: string
+        - name: origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+        - name: body
+          in: body
+          schema:
+            anyOf:
+              - type: object
+                properties:
+                  filters:
+                    type: array
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: number
+                        description: >-
+                          Página que deseja consultar (começando por 0).
+                          Exemplo:
+                      size:
+                        type: number
+                        description: 'Quantidade de itens por página. Exemplo:'
+                      sort_by:
+                        type: string
+                        description: >-
+                          Valor utilizado como parâmetro para ordenação do
+                          resultado da busca. Exemplo:
+                      sort_order:
+                        type: string
+                        description: >-
+                          Ordenação do resultado da busca, "asc" para ascendete
+                          e "desc" para descendente. Exemplo:
+                    description: Dados da paginação
+                required:
+                  - filters
+                  - pagination
+                example:
+                  filters:
+                    - _comment1: Busca pelo external-id da asset
+                      key: external-id
+                      condition: contains
+                      values:
+                        - '000151084591800012025'
+                    - key: status.name
+                      condition: contains
+                      values:
+                        - Disponível
+                  pagination:
+                    sort_by: number.keyword
+                    sort_order: desc
+                    page: 0
+                    size: 25
+              - type: object
+                properties:
+                  filters:
+                    type: array
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: number
+                        description: >-
+                          Página que deseja consultar (começando por 0).
+                          Exemplo:
+                      size:
+                        type: number
+                        description: 'Quantidade de itens por página. Exemplo:'
+                      sort_by:
+                        type: string
+                        description: >-
+                          Valor utilizado como parâmetro para ordenação do
+                          resultado da busca. Exemplo:
+                      sort_order:
+                        type: string
+                        description: >-
+                          Ordenação do resultado da busca, "asc" para ascendete
+                          e "desc" para descendente. Exemplo:
+                    description: Dados da paginação
+                required:
+                  - filters
+                  - pagination
+                example:
+                  _comment1: >-
+                    Busca por status Disponivel ou Negociado e data importação
+                    entre duas datas
+                  filters:
+                    - condition: equals
+                      input_type: select
+                      key: status.name
+                      name: Status
+                      type: string
+                      values:
+                        - Disponivel
+                        - Negociado
+                    - condition: between
+                      input_type: date
+                      key: created_at
+                      name: Data importação
+                      type: date
+                      values:
+                        - '2023-07-15'
+                        - '2023-08-14'
+                  pagination:
+                    page: 0
+                    size: 25
+                    sort_by: created_at
+                    sort_order: desc
+              - type: object
+                properties:
+                  filters:
+                    type: array
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: number
+                        description: >-
+                          Página que deseja consultar (começando por 0).
+                          Exemplo:
+                      size:
+                        type: number
+                        description: 'Quantidade de itens por página. Exemplo:'
+                      sort_by:
+                        type: string
+                        description: >-
+                          Valor utilizado como parâmetro para ordenação do
+                          resultado da busca. Exemplo:
+                      sort_order:
+                        type: string
+                        description: >-
+                          Ordenação do resultado da busca, "asc" para ascendete
+                          e "desc" para descendente. Exemplo:
+                    description: Dados da paginação
+                required:
+                  - filters
+                  - pagination
+                example:
+                  _comment1: >-
+                    Busca por data de importação entre duas datas e nome do
+                    fornecedor contém FORNECEDOR1
+                  filters:
+                    - condition: between
+                      input_type: date
+                      key: created_at
+                      name: Data importação
+                      type: date
+                      values:
+                        - '2023-07-15'
+                        - '2023-08-14'
+                    - condition: contains
+                      input_type: text
+                      key: from.name.keyword
+                      name: Fornecedor
+                      type: string
+                      values:
+                        - FORNECEDOR1
+                  pagination:
+                    page: 0
+                    size: 25
+                    sort_by: created_at
+                    sort_order: desc
+              - type: object
+                properties:
+                  filters:
+                    type: array
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: number
+                        description: >-
+                          Número da página inicial da paginação do resultado do
+                          filtro. Exemplo:
+                      size:
+                        type: number
+                        description: 'Quantidade de resultados por página. Exemplo:'
+                      sort_by:
+                        type: string
+                        description: >-
+                          Valor utilizado como parâmetro para ordenação do
+                          resultado da busca. Exemplo:
+                      sort_order:
+                        type: string
+                        description: >-
+                          Ordenação do resultado da busca, "asc" para ascendete
+                          e "desc" para descendente. Exemplo:
+                    description: Dados da paginação
+                required:
+                  - filters
+                  - pagination
+                example:
+                  _comment1: >-
+                    Busca por data de importação entre duas datas e CNPJ do
+                    fornecedor conter dois valores
+                  filters:
+                    - condition: between
+                      input_type: date
+                      key: created_at
+                      name: Data importação
+                      type: date
+                      values:
+                        - '2023-07-15'
+                        - '2023-08-14'
+                    - condition: contains
+                      input_type: text
+                      key: from.tax-number.keyword
+                      name: Fornecedor
+                      type: string
+                      values:
+                        - '12345678901234'
+                        - '43210987654321'
+                  pagination:
+                    page: 0
+                    size: 25
+                    sort_by: created_at
+                    sort_order: desc
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+  /movements/{category}/{id}/children:
+    get:
+      responses:
+        '200':
+          description: Success. Posting list
+          headers: {}
+          examples: {}
+        '400':
+          description: >-
+            Bad Request. Pode ocorrer quando o envio dos dados está
+            inconsistente
+          headers: {}
+          examples: {}
+        '401':
+          description: Os dados de autenticação do usuário não são válidos
+          headers: {}
+          examples: {}
+        '403':
+          description: O usuário não está autorizado a realizar essa operação
+          headers: {}
+          examples: {}
+      summary: Buscar movimentos relacionado
+      operationId: Buscar movimentos relacionado
+      description: >-
+        <b>Busca movimentos</b> financeiros relacionados a um movimento já
+        existente no programa de crédito.
+
+
+        Protocolo de segurança e autenticação -
+        <b>[oAuth2](reference/#oauth2)</b>
+      tags:
+        - Buscar movimento relacionado
+      parameters:
+        - name: category
+          in: path
+          description: >-
+            **Query parameter.** Categoria do movimento pai. <ul>Suportados:
+            <b>`asset`</b> <b>`receipts`</b> <b>`trades`</b> <b>`offers`</b>
+            </ul>
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: '**Query parameter.** ID do movimento pai (URL encoding)<br>'
+          required: true
+          x-example: abcdefg1234567890
+          type: string
+        - name: page
+          in: body
+          description: '**Query String.** Página que deseja consultar (começando por 0)'
+          required: true
+          x-example: '0'
+          schema:
+            type: number
+        - name: size
+          in: body
+          description: '**Query String.** Quantidade de itens por página'
+          required: true
+          x-example: '100'
+          schema:
+            type: number
+        - name: start_date
+          in: body
+          description: >-
+            **Query String.** Data inicial dos resultados apresentados. Formato:
+            AAAA-MM-DD<br>
+          required: false
+          x-example: '2023-01-01'
+          schema:
+            type: string
+        - name: end_date
+          in: body
+          description: >-
+            **Query String.** Data final dos resultados apresentados. Formato:
+            AAAA-MM-DD<br>
+          required: false
+          x-example: '2023-01-10'
+          schema:
+            type: string
+        - name: origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+  /movements/{category}/{id}:
+    put:
+      responses:
+        '202':
+          description: Accepted. Requisição foi recebida com sucesso e será processada.
+          headers: {}
+          examples: {}
+        '400':
+          description: >-
+            Bad Request. Pode ocorrer quando o envio dos dados está
+            inconsistente
+          headers: {}
+          examples: {}
+        '401':
+          description: Os dados de autenticação do usuário não são válidos
+          headers: {}
+          examples: {}
+        '403':
+          description: O usuário não está autorizado a realizar essa operação
+          headers: {}
+          examples: {}
+      summary: Atualizar movimento
+      operationId: Atualizar movimento
+      description: >-
+        <b>Atualiza o movimento</b> financeiro de acordo com os campos
+        especificados. Apenas os campos que estiverem descritos na QueryString
+        '<b>fields</b>' serão atualizados. Desta forma, se um campo for
+        informado em '<b>fields</b>' ele deverá obrigatoriamente estar dentro do
+        objeto <b>data</b> no body request.
+
+
+        Protocolo de segurança e autenticação -
+        <b>[oAuth2](reference/oauth2)</b>
+      tags:
+        - Atualizar movimento
+      parameters:
+        - name: category
+          in: path
+          description: >-
+            **Path parameter.** <br> Tipo de movimento a ser buscado.
+            <ul>Suportados: <b>`asset`</b> <b>`receipts`</b> <b>`trades`</b>
+            <b>`offers`</b> </ul>
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: >-
+            **Path parameter.** <br> Identificador do movimento que será
+            atualizado (URL encoding).
+          required: true
+          x-example: abcdefg1234567890
+          type: string
+        - name: fields
+          in: body
+          description: >-
+            **Query String.** <br> Estes são os atributos que serão enviados no
+            objeto "data", no body da requisição, e que deverão ser atualizados
+            no sistema. Esses campos poderão variar entre projetos, conforme as
+            configurações realizadas na integração.  <ul> Suportados:
+            <b>`asset.number`</b> <b>`trade.number`</b> <b>`number`</b>
+            <b>`amount`</b> <b>`status.name`</b> <b>`status.category`</b>
+            <b>`additional_data`</b> <b>`miro_number`</b> <b>`nfe_key`</b> </ul>
+          required: true
+          schema:
+            type: string
+        - name: scope
+          in: body
+          description: '**Query String.** <br> Tipo de movimento que será atualizado<br>'
+          required: true
+          x-example: asset
+          schema:
+            type: string
+        - name: origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: 'Tipo do movimento que será atualizado. Exemplo:'
+              data:
+                type: object
+                properties:
+                  miro_number:
+                    type: string
+                    description: 'Número do MIRO da movimentação. Exemplo:'
+                  nfe_key:
+                    type: string
+                    description: 'Chave de acesso da NF-e. Exemplo:'
+                  created_at:
+                    type: string
+                    description: >-
+                      Data da criação da nota. Formato da data:
+                      AAAA-MM-DDTHH:MM:SS (o mesmo que:
+                      ano-mês-diaThora:minuto:segundo). Exemplo:
+                  number:
+                    type: string
+                    description: 'Número da nota fiscal. Exemplo:'
+                  amount:
+                    type: string
+                    description: 'Valor da nota fiscal. Exemplo:'
+                  post_date:
+                    type: string
+                    description: >-
+                      Data de vencimento da nota. Formato da data: AAAA-MM-DD (o
+                      mesmo que: ano-mês-dia). Exemplo:
+                  external_id:
+                    type: string
+                    description: 'Identificador externo. Exemplo:'
+                  date:
+                    type: string
+                    description: >-
+                      Data de cadastro da movimentação. Formato da data:
+                      AAAA-MM-DD (o mesmo que: ano-mês-dia). Exemplo:
+              from:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 'Nome do Fornecedor. Exemplo:'
+                  data:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        description: 'Use "seller" para Fornecedor. Exemplo:'
+                      tax_number:
+                        type: string
+                        description: 'Número do documento (CNPJ) do Fornecedor. Exemplo:'
+                description: Dados do Fornecedor
+              to:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 'Nome do Sacado. Exemplo:'
+                  data:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        description: 'Use "buyer" para Sacado. Exemplo:'
+                      tax_number:
+                        type: string
+                        description: 'Número do documento (CNPJ/CPF) do Sacado. Exemplo:'
+                description: Dados do Sacado
+            required:
+              - id
+              - data
+              - from
+              - to
+            example:
+              id: asset
+              data:
+                miro_number: '1000'
+                nfe_key: '42230707549194000128550030000879961586032907'
+                created_at: '2023-07-28T09:25:00'
+                number: '70'
+                amount: '7894.00'
+                post_date: '2023-07-28'
+                external_id: '70'
+                date: '2023-07-20'
+                from:
+                  name: FORNECEDOR TESTE
+                  data:
+                    type: seller
+                    tax_number: '68463222000184'
+                to:
+                  name: SACADO TESTE
+                  data:
+                    type: buyer
+                    tax_number: '69929693000106'
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+  /draft_movements/trade:
+    post:
+      responses:
+        '201':
+          description: Created
+          headers:
+            Location:
+              type: string
+          examples:
+            application/json: {}
+          schema:
+            type: object
+            properties: {}
+            example: {}
+      summary: Criar lote de movimentos
+      operationId: Criar lote de movimentos
+      description: >-
+        Inicia um novo lote. Este lote criado atua como um "envelope" que irá
+        agrupar e vincular os títulos de uma mesma negociação.
+
+
+        Ao ser criado com sucesso, o lote recebe um identificador exclusivo, no
+        formato UUID4, que deve ser utilizado em uma chamada posterior para
+        incluir títulos ao lote.
+      tags:
+        - Lote de Movimentos
+      parameters:
+        - name: Origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              action:
+                type: string
+              data:
+                type: object
+                properties: {}
+            example:
+              action: start
+              data: {}
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+    put:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          examples:
+            application/json: {}
+          schema:
+            type: object
+            properties: {}
+            example: {}
+      summary: Finalizar lote de movimentos
+      operationId: Finalizar lote de movimentos
+      description: >-
+        Fecha o lote atual em aberto, vinculando a ele todos os títulos
+        adicionados até o momento e, na sequência, inicia o seu processamento.
+
+
+        Para a execução desta etapa, é obrigatório enviar o nome e o CNPJ da
+        entidade compradora dos títulos dentro do objeto `"data"`. Como o campo
+        `"data"` aceita chaves dinâmicas (pares de chave/valor livres), a
+        escolha dos nomes dessas chaves é livre. No payload de exemplo,
+        utilizamos `buyer_name` e `buyer_tax_number`.
+
+
+        O objeto `"data"` aceita um número indeterminado de campos customizados,
+        permitindo o envio de qualquer outra informação adicional que seja
+        relevante para a negociação (Ex: `buyer_control_number`).
+      tags:
+        - Lote de Movimentos
+      parameters:
+        - name: Origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              action:
+                type: string
+              data:
+                type: object
+                properties:
+                  buyer_name:
+                    type: string
+                  buyer_tax_number:
+                    type: string
+                  buyer_control_number:
+                    type: string
+            example:
+              action: request
+              data:
+                buyer_name: FIDC III
+                buyer_tax_number: '12345678901234'
+                buyer_control_number: '123456'
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+    delete:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          examples:
+            application/json: {}
+          schema:
+            type: object
+            properties: {}
+            example: {}
+      summary: Cancelar lote atual
+      operationId: Cancelar lote atual
+      description: >-
+        Exclui e descarta o lote atual que estiver em aberto. Após a execução
+        desta ação, todos os títulos previamente associados a este lote são
+        desvinculados e, para realizar qualquer nova operação, será necessário
+        iniciar um novo lote.
+      tags:
+        - Lote de Movimentos
+      parameters:
+        - name: Origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+      produces:
+        - application/json
+      consumes: []
+      security:
+        - oauth2: []
+  /draft_movements/trade/{uuid_identificador_do_lote}/children:
+    put:
+      responses:
+        '202':
+          description: Accepted
+          headers: {}
+          examples:
+            application/json: {}
+          schema:
+            type: object
+            properties: {}
+            example: {}
+      summary: Adicionar movimentos em um lote
+      operationId: Adicionar movimentos em um lote
+      description: >-
+        Anexa uma lista de ativos ao lote especificado.
+
+
+        Cada movimento incluído ao lote representa um ativo ou título de lastro
+        que está sendo acrescentado à negociação.
+
+
+        Este endpoint pode ser invocado de maneira incremental, tendo a
+        possibilidade de ser chamado múltiplas vezes enquanto o lote permanecer
+        com o status aberto.
+
+
+        #### Detalhamento dos campos do payload
+
+
+        * `id` (string, obrigatório) - tipo do movimento internamente no sistema
+        - Ex: asset
+
+
+        * `type.type` (string, obrigatório) - tipo do título que está sendo
+        negociado. Ex: CCB, Contrato, Fatura...
+
+
+        * `to.name` (string, obrigatório) - nome do cliente
+
+
+        * `to.tax_number` (string, obrigatório) - CPF do cliente
+
+
+        O campo `data` aceita qualquer par de chave/valor. 
+
+        No payload de exemplo foram listados dados mínimos e obrigatórios de um
+        título. 
+
+        Caso necessário, mais informações podem ser adicionadas a este campo na
+        forma de chaves customizadas livremente.
+
+
+        * `data.id` (string, obrigatório) - id único do título
+
+
+        * `data.amount` (string, obrigatório) - valor do título
+
+
+        * `data.disbursement` (string, obrigatório) - valor cedido do título
+
+
+        * `data.external_id` (string, obrigatório) - id adicional (caso não haja
+        outro, repetir o valor do data.id)
+
+
+        * `data.number` (string, obrigatório) - número do título
+
+
+        * `data.number_of_installments` (integer, obrigatório) - número de
+        parcelas
+
+
+        * `data.first_installment_date` (string, obrigatório) - data da primeira
+        parcela
+
+
+        * `data.last_installment_date` (string, obrigatório) - data da última
+        parcela
+      tags:
+        - Lote de Movimentos
+      parameters:
+        - name: uuid_identificador_do_lote
+          in: path
+          description: identificador UUID exclusivo do lote
+          required: true
+          x-example: 7686d387-a7e2-44c7-b764-b0adac4e400d
+          type: string
+        - name: Origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                type:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                to:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    tax_number:
+                      type: string
+                data:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    amount:
+                      type: string
+                    disbursement:
+                      type: string
+                    external_id:
+                      type: string
+                    number:
+                      type: string
+                    number_of_installments:
+                      type: number
+                    first_installment_date:
+                      type: string
+                    last_installment_date:
+                      type: string
+            example:
+              - id: asset
+                type:
+                  type: CCB
+                to:
+                  name: Nogueira da Costa
+                  tax_number: '99191423015'
+                data:
+                  id: '99999'
+                  amount: '48666.24'
+                  disbursement: '2332.80'
+                  external_id: '99999'
+                  number: AR0026
+                  number_of_installments: 36
+                  first_installment_date: '2025-01-25'
+                  last_installment_date: '2027-12-25'
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+  /authz/users:
+    get:
+      responses:
+        '200':
+          description: Success. Posting list
+          headers: {}
+          examples: {}
+        '400':
+          description: >-
+            Bad Request. Pode ocorrer quando o envio dos dados está
+            inconsistente
+          headers: {}
+          examples: {}
+        '401':
+          description: Os dados de autenticação do usuário não são válidos
+          headers: {}
+          examples: {}
+        '403':
+          description: O usuário não está autorizado a realizar essa operação
+          headers: {}
+          examples: {}
+      summary: Buscar usuários relacionado
+      operationId: Buscar usuários relacionado
+      description: >-
+        <b>Busca usuários</b> relacionados com o solicitante da requisição. Os
+        usuários possuem perfis de permissão distintos, são eles: <b>Master,
+        Consultor e Operador.</b>
+
+
+        Protocolo de segurança e autenticação -
+        <b>[oAuth2](reference/#oauth2)</b>
+      tags:
+        - Buscar usuários relacionados
+      parameters:
+        - name: origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+    post:
+      responses:
+        '201':
+          description: Created. Movimento foi criado com sucesso
+          headers: {}
+          examples: {}
+        '400':
+          description: >-
+            Bad Request. Pode ocorrer quando o envio dos dados está
+            inconsistente
+
+            Pode haver retornos formatados quando o e-mail já existe.
+          headers: {}
+          examples: {}
+        '401':
+          description: Os dados de autenticação do usuário não são válidos
+          headers: {}
+          examples: {}
+        '403':
+          description: O usuário não está autorizado a realizar essa operação
+          headers: {}
+          examples: {}
+      summary: Criar usuários
+      operationId: Criar usuários
+      description: >-
+        A ação realiza a criação de um usuário com um dos seguintes perfis de
+        permissionamento:<br>
+
+        <br><b>Master:</b> Pode criar, editar e desativar usuários; realizar
+        operações na plataforma, além de consultas e extração de relatórios no
+        programa;
+
+        <br><br><b>Consultant:</b> Pode realizar operações na plataforma, além
+        de consultas e extração de relatórios no programa. Não pode realizar a
+        gestão de usuários;
+
+        <br><br><b>Operator:</b> Pode realizar consultas e extrair relatórios no
+        programa;
+
+
+        <br><b>ATENÇÃO:</b> O usuário criado será vinculado a todas as
+        organizações matrizes e filiais que o requisitante possui.
+
+
+        Protocolo de segurança e autenticação -
+        <b>[oAuth2](reference/#oauth2)</b>
+      tags:
+        - Criar usuários
+      parameters:
+        - name: origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            required:
+              - name
+              - last_name
+              - email
+              - attributes
+            properties:
+              name:
+                type: string
+                example: João
+                description: 'Nome do usuário que será criado. Exemplo:'
+              last_name:
+                type: string
+                example: Silva
+                description: 'Sobrenome do usuário que será criado. Exemplo:'
+              email:
+                type: string
+                example: joao_silva@teste.com.br
+                description: 'Email do usuário que será criado. Exemplo:'
+              attributes:
+                type: object
+                required:
+                  - group
+                  - enabled
+                properties:
+                  group:
+                    type: string
+                    example: consultant
+                    description: >-
+                      Tipo do usuário que será criado [Master, consultant e
+                      operator]. Exemplo:
+                  enabled:
+                    type: string
+                    example: 'true'
+                    description: >-
+                      Status do usuário que será criado [true ou false].
+                      Exemplo:
+                description: Atributos do usuário
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+  /authz/users/{email}:
+    put:
+      responses:
+        '204':
+          description: Accepted. Requisição foi recebida com sucesso e será processada.
+          headers: {}
+          examples: {}
+        '400':
+          description: >-
+            Bad Request. Pode ocorrer quando o envio dos dados está
+            inconsistente
+          headers: {}
+          examples: {}
+        '401':
+          description: Os dados de autenticação do usuário não são válidos
+          headers: {}
+          examples: {}
+        '403':
+          description: O usuário não está autorizado a realizar essa operação
+          headers: {}
+          examples: {}
+      summary: Atualizar usuário
+      operationId: Atualizar usuário
+      description: >-
+        Realiza a atualização dos atributos de um usuário.
+
+
+        Atributos que podem ser atualizados:
+
+
+        <b>"name":</b> Nome do usuário;<br>
+
+        <b>"last_name":</b> Sobrenome do usuário;<br>
+
+        <b>"group":</b> Perfil de permissionamento do usuário;<br>
+
+        <b>"enabled":</b> Usuário <b>ativo</b> (<b>true</b>, com acesso ao
+        sistema) ou <b>inativo</b> (<b>false</b>, sem acesso ao sistema);
+
+
+        Protocolo de segurança e autenticação -
+        <b>[oAuth2](reference/oauth2)</b>
+      tags:
+        - Atualizar usuário
+      parameters:
+        - name: email
+          in: path
+          description: Email do usuário que será atualizado.
+          required: true
+          type: string
+        - name: origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: 'Nome do usuário a ser atualizado. Exemplo:'
+              last_name:
+                type: string
+                description: 'Sobrenome do usuário a ser atualizado. Exemplo:'
+              email:
+                type: string
+                description: 'Email do usuário a ser atualizado. Exemplo:'
+              attributes:
+                type: object
+                properties:
+                  group:
+                    type: string
+                    description: >-
+                      Tipo do usuário a ser atualizado [Master, consultant e
+                      operator]. Exemplo:
+                  enabled:
+                    type: string
+                    description: >-
+                      Status do usuário a ser atualizado [true ou false].
+                      Exemplo:
+                required:
+                  - group
+                  - enabled
+                description: Atributos do usuário
+            required:
+              - name
+              - last_name
+              - email
+              - attributes
+            example:
+              name: João
+              last_name: Silva
+              email: joao_silva@teste.com.br
+              attributes:
+                group: consultant
+                enabled: 'true'
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+  /members/invite:
+    post:
+      responses:
+        '200':
+          description: Success. Convite enviado com sucesso
+          headers: {}
+          examples: {}
+        '400':
+          description: >-
+            Bad Request. Pode ocorrer quando o envio dos dados está
+            inconsistente
+          headers: {}
+          examples: {}
+        '401':
+          description: Os dados de autenticação do usuário não são válidos
+          headers: {}
+          examples: {}
+        '403':
+          description: O usuário não está autorizado a realizar essa operação
+          headers: {}
+          examples: {}
+      summary: Enviar Convite
+      operationId: Enviar Convite
+      description: >-
+        Realiza o envio de convites novos participantes do programa
+        (Fornecedores, Sacados e Agentes Financeiros).
+
+
+        Protocolo de segurança e autenticação -
+        <b>[oAuth2](reference/#oauth2)</b>
+
+
+        <b>IMPORTANTE:</b>
+
+
+        - Somente o perfil/credencial do Gestor da Plataforma pode enviar
+        convites
+      tags:
+        - Enviar convite para novos participantes
+      parameters:
+        - name: origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              tax_number:
+                type: string
+                description: 'CNPJ do Participante. Exemplo:'
+              name:
+                type: string
+                description: 'Nome do Participante. Exemplo:'
+              email:
+                type: string
+                description: 'E-mail do Participante. Exemplo:'
+              role:
+                type: string
+                description: >-
+                  Perfil do Participante convidado (para Fornecedor utilize
+                  "seller", para Sacado utilize "buyer" e para Agente Financeiro
+                  utilize "trading-partner"). Exemplo:
+            example:
+              tax_number: '76843805000169'
+              name: FORNECEDOR TESTE
+              email: fornecedor.teste@teste.com.br
+              role: seller
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+  /organizations:
+    get:
+      responses:
+        '200':
+          description: Success. Busca do cadastro retornada com sucesso
+          headers: {}
+          examples:
+            application/json:
+              page:
+                size: 1
+                number: 0
+                total_pages: 1
+                total_elements: 1
+              content:
+                - '@id': f439ccf7-206b-4e63-b590-4546454646
+                  id: d0be7316-da6f-c987-edee-45465456464
+                  name: Fornecedor Teste
+                  tax_number: '80988977000106'
+                  primary_contact:
+                    id: ''
+                    email: fornecedor.teste@fornecedor.com.br
+                    name: Fornecedor Teste
+                    phone_number: (11) 2121-2121
+                    primary: true
+                  basetax_number: '123456789456'
+                  primaryemail: fornecedor_teste@teste.com.br
+          schema:
+            type: object
+            properties:
+              page:
+                type: object
+                properties:
+                  size:
+                    type: number
+                    description: 'Tamanho da página (exemplo: 30)'
+                  number:
+                    type: number
+                    description: 'Número da página (exemplo: 12)'
+                  total_elements:
+                    type: number
+                    description: 'Total de elementos (exemplo: 10)'
+                  total_pages:
+                    type: number
+                    description: 'Total de páginas (exemplo: 20)'
+                description: Parâmetros da paginação (exemplo)
+              content:
+                type: object
+                properties:
+                  '@id':
+                    type: string
+                    description: 'Identificador interno do novo participante (exemplo: 123)'
+                  id:
+                    type: string
+                    description: 'Identificador interno do novo participante (exemplo: 123)'
+                  name:
+                    type: string
+                    description: 'Nome do novo participante (exemplo: João da Silva)'
+                  tax_number:
+                    type: string
+                    description: Número de identificação (CPF/CNPJ)
+                  primary_contact:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: >-
+                          Identificador interno do novo participante (exemplo:
+                          123)
+                      email:
+                        type: string
+                        description: 'E-mail do novo participante (exemplo: joao@email.com)'
+                      name:
+                        type: string
+                        description: 'Nome do participante (exemplo: João da Silva)'
+                      phone_number:
+                        type: string
+                        description: 'Nome do participante (exemplo: 11999999999)'
+                      primary:
+                        type: string
+                        description: >-
+                          Parâmetro que informa se o contato é o contato
+                          primário, principal, do novo participante (exemplo:
+                          True)
+                      base_tax_number:
+                        type: string
+                        description: Número de identificação (CPF/CNPJ)
+                      primary_email:
+                        type: string
+                        description: >-
+                          E-mail principal do cadastro do Fornecedor (exemplo:
+                          joao@email.com)
+                    description: Dados de contato do novo participante (exemplo)
+                description: Dados do conteudo da resposta (exemplo)
+        '400':
+          description: >-
+            Bad Request. Pode ocorrer quando o envio dos dados está
+            inconsistente
+          headers: {}
+          examples: {}
+        '401':
+          description: Os dados de autenticação do usuário não são válidos
+          headers: {}
+          examples: {}
+        '403':
+          description: O usuário não está autorizado a realizar essa operação
+          headers: {}
+          examples: {}
+      summary: Consultar Cadastro
+      operationId: Consultar Cadastro
+      description: >-
+        Realiza a busca de um cadastro na plataforma para o posterior envio do
+        convite de participação no programa/integração.
+
+
+        Protocolo de segurança e autenticação -
+        <b>[oAuth2](reference/#oauth2)</b>
+
+
+        <b>IMPORTANTE:</b> O cadastro do novo participante deve ser realizado
+        previamente no site https://finan4.net para que seja encontrado através
+        deste endpoint e, posteriormente, convidado para a participar do
+        programa.
+      tags:
+        - Consultar Cadastro
+      parameters:
+        - name: tax_number
+          in: body
+          description: 'CNPJ do novo participante. Exemplo:'
+          required: true
+          x-example: '80988977000106'
+          schema:
+            type: string
+        - name: origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+  /members/{id}/actions/optin?sync={true}:
+    patch:
+      responses:
+        '200':
+          description: >-
+            Response da requisição SEM BODY foi recebida com sucesso, porém há
+            algum erro na URL.
+          headers: {}
+          examples: {}
+        '204':
+          description: Response da requisição SEM BODY foi recebida com sucesso.
+          headers: {}
+          examples: {}
+        '401':
+          description: Os dados de autenticação do usuário não são válidos
+          headers: {}
+          examples: {}
+        '403':
+          description: O usuário não está autorizado a realizar essa operação
+          headers: {}
+          examples: {}
+      summary: OPT-IN
+      operationId: OPT-IN
+      description: >-
+        Este endpoint realiza a solicitação de um Opt-in em uma Credenciadora
+        (definida previamente em conversa com a equipe da IDT).
+
+
+        Protocolo de segurança e autenticação -
+        <b>[oAuth2](reference/#oauth2)</b>
+      tags:
+        - Enviar Opt-in
+      parameters:
+        - name: id
+          in: path
+          description: CNPJ da organização que está realizando o envio..
+          required: true
+          x-example: '123456789012345'
+          type: string
+        - name: sync
+          in: body
+          description: >-
+            É necessário incluir esta query string na URL para obter um retorno
+            síncrono, caso não seja informado, o padrão é false.
+          required: true
+          x-example: 'true'
+          schema:
+            type: string
+        - name: origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  receivable_type:
+                    type: string
+                    description: Tipo de registro (`UR` ou `DUPLICATA`).
+                  external_id:
+                    type: string
+                    description: Referência externa.
+                  wallet:
+                    type: string
+                    description: Nome da carteira registrada na Registradora.
+                  start_date:
+                    type: string
+                    description: 'Data de início (padrão: data atual).'
+                  due_date:
+                    type: string
+                    description: Data de término.
+                  signature_date:
+                    type: string
+                    description: >-
+                      Data da assinatura obrigatória quando o tipo de registro é
+                      UR.
+                  applicant_name:
+                    type: string
+                    description: Nome do solicitante.
+                  applicant_document_number:
+                    type: string
+                    description: CNPJ do solicitante (14 números).
+                  acquirers_document_number:
+                    type: string
+                    description: CNPJ da adquirente  (14 números).
+                required:
+                  - receivable_type
+                  - external_id
+                  - wallet
+                  - due_date
+                  - applicant_name
+                  - applicant_document_number
+                  - acquirers_document_number
+                description: 'Contém as informações detalhadas do Opt-in. Exemplo:'
+            required:
+              - data
+            example:
+              data:
+                receivable_type: UR
+                external_id: IDENTIFICADOR-1234
+                wallet: carteira-teste
+                start_date: '2024-12-05'
+                due_date: '2025-01-05'
+                signature_date: '2024-11-05'
+                applicant_name: NOME DA EMPRESA
+                applicant_document_number: '12345678901234'
+                acquirers_document_number: '12345678901234'
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+  /members/{id}/actions/optout?sync={true}:
+    patch:
+      responses:
+        '200':
+          description: >-
+            Response da requisição SEM BODY foi recebida com sucesso, porém há
+            algum erro na URL.
+          headers: {}
+          examples: {}
+        '204':
+          description: Response da requisição SEM BODY foi recebida com sucesso.
+          headers: {}
+          examples: {}
+        '401':
+          description: Os dados de autenticação do usuário não são válidos
+          headers: {}
+          examples: {}
+        '403':
+          description: O usuário não está autorizado a realizar essa operação
+          headers: {}
+          examples: {}
+      summary: OPT-OUT
+      operationId: OPT-OUT
+      description: >-
+        Este endpoint realiza a solicitação de um Opt-out em uma Credenciadora
+        (definida previamente em conversa com a equipe da IDT).
+
+
+        Protocolo de segurança e autenticação -
+        <b>[oAuth2](reference/#oauth2)</b>
+      tags:
+        - Enviar Opt-out
+      parameters:
+        - name: id
+          in: path
+          description: CNPJ da organização que está realizando o envio..
+          required: true
+          x-example: '123456789012345'
+          type: string
+        - name: sync
+          in: body
+          description: >-
+            É necessário incluir este query string na URL para obter um retorno
+            síncrono, caso não seja informado, o padrão é false.
+          required: true
+          x-example: 'true'
+          schema:
+            type: string
+        - name: origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  receivable_type:
+                    type: string
+                    description: >-
+                      Tipo de registro que será criado após o Opt-in (UR ou
+                      DUPLICATA). Exemplo:
+                  external_id:
+                    type: string
+                    description: >-
+                      Campo livre para adicionar um identificador do Opt-in.
+                      Exemplo:
+                  wallet:
+                    type: string
+                    description: 'Nome da carteira registrada na Registradora. Exemplo:'
+                description: >-
+                  Mapa de objetos no formato <String, String>. Contém as
+                  informações detalhadas do Opt-in. (exemplo)
+            example:
+              data:
+                receivable_type: UR
+                external_id: IDENTIFICADOR-1234
+                wallet: carteira-teste
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+  /:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          examples: {}
+      summary: WEBHOOK/CALLBACK
+      operationId: WEBHOOK/CALLBACK
+      description: >-
+        Este processo se refere ao payload de retorno (callback) do
+        processamento das ações de Opt-in e Opt-out.
+
+
+        <b>IMPORTANTE:</b> Necessária a configuração prévia do processo de
+        callback junto a equipe de implantação, tendo como requisito um
+        endpoint/API do cliente a ser utilizado como destino da requisição
+        realizada pelo webhook.
+      tags:
+        - Webhook/Callback
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              receivable_type:
+                type: string
+                description: Tipo de registro (`UR` ou `DUPLICATA`).
+              external_id:
+                type: string
+                description: Referência externa.
+              wallet:
+                type: string
+                description: Nome da carteira registrada na Registradora.
+              date:
+                type: string
+                description: Data do processamento.
+              status:
+                type: string
+                description: >-
+                  Status do processamento da ação na registradora (success:
+                  sucesso, error: erro).
+              message:
+                type: string
+                description: Mensagem com confirmação do status.
+              data:
+                type: object
+                properties:
+                  additional_data:
+                    type: string
+                    description: >-
+                      Campo com informações adicionais, utilizado conforme a
+                      necessidade da registradora.
+                required:
+                  - additional_data
+                description: 'Contém as informações detalhadas do Opt-in. Exemplo:'
+            required:
+              - receivable_type
+              - external_id
+              - wallet
+              - date
+              - status
+              - message
+              - data
+            example:
+              action: optin
+              external_id: IDENTIFICADOR-1234
+              wallet: carteira-teste
+              date: '2024-12-12T12:12:12'
+              status: success
+              message: Opt-in registrado com sucesso
+              data:
+                additional_data: Informações adicionais
+      consumes:
+        - application/json
+  /movements/asset?sync=true:
+    patch:
+      responses:
+        '200':
+          description: >-
+            Response da requisição SEM BODY foi recebida com sucesso, porém há
+            algum erro na URL.
+          headers: {}
+          examples: {}
+        '401':
+          description: Os dados de autenticação do usuário não são válidos
+          headers: {}
+          examples: {}
+        '403':
+          description: O usuário não está autorizado a realizar essa operação
+          headers: {}
+          examples: {}
+      summary: CONSULTA DE AGENDA E CRIAR CONTRATOS
+      operationId: CONSULTA DE AGENDA E CRIAR CONTRATOS
+      description: >-
+        Este endpoint realiza a solicitação de consulta de URs de um
+        estabelecimento e solicita a criação de contratos em uma Credenciadora
+        (homologada IDT).
+
+
+        Protocolo de segurança e autenticação -
+        <b>[oAuth2](reference/#oauth2)</b>
+      tags:
+        - Agenda e Contrato
+      parameters:
+        - name: sync
+          in: body
+          description: >-
+            É necessário incluir esta query string na URL para obter um retorno
+            síncrono, caso não seja informado, o padrão é false.
+          required: true
+          x-example: 'true'
+          schema:
+            type: string
+        - name: origin
+          in: header
+          description: e.g. {origin}
+          required: false
+          x-example: '{origin}'
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              action:
+                type: string
+                description: 'Ação a ser realizada. FIXO:'
+              data:
+                type: object
+                properties:
+                  external_id:
+                    type: string
+                    description: >-
+                      Campo livre para adicionar um identificador da consulta e
+                      criação do contrato. Exemplo:
+                  start_date:
+                    type: string
+                    description: 'Data de inicio da consulta (Formato: YYYY-MM-dd). Exemplo:'
+                  end_date:
+                    type: string
+                    description: 'Data final de consulta (Formato: YYYY-MM-dd). Exemplo:'
+                  card_issuers:
+                    type: string
+                    description: 'CNPJ das Credenciadoras (separados por virgula). Exemplo:'
+                  payment_schemes:
+                    type: string
+                    description: >-
+                      Bandeiras que serão buscadas (separados por virgula).
+                      Exemplo:
+                  supplier_document_number:
+                    type: string
+                    description: >-
+                      Número do documento do Estabelecimento (um CNPJ apenas).
+                      Exemplo:
+                  amount:
+                    type: string
+                    description: >-
+                      Valor a ser solicitado integralmente (Formato: 00.00) [NÃO
+                      OBRIGATÓRIO, depende do fluxo]. Exemplo:
+                description: >-
+                  Mapa de objetos no formato <String, String>. Contém as
+                  informações detalhadas. (exemplo)
+            example:
+              action: import-wallet
+              data:
+                external_id: EXTERNAL_ID_REFERENCE_01
+                start_date: '2024-01-01'
+                end_date: '2024-12-01'
+                card_issuers: 12345678901234,12345678901234
+                payment_schemes: ACC,ECC
+                supplier_document_number: '12345678901234'
+                amount: '1200.00'
+      consumes:
+        - application/json
+      security:
+        - oauth2: []
+definitions:
+  POST: {}
+  GET: {}
+  PATCH: {}
+  PUT: {}
+  Gerenciamento de lote: {}
+  Itens de lote: {}
+securityDefinitions:
+  oauth2:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: ''
+    tokenUrl: ''
+    scopes: {}
+tags:
+  - name: Authentication
+    description: >-
+      <h2 id="oauth2"> <a href="#oauth2"> oAuth2 </a> </h2>
+
+
+      A API Plataforma IDT utiliza como protocolo de autenticação o padrão
+      <b>oAuth2</b>. Para autenticação é necessário requsitar um <b>token</b> de
+      acesso para utilizar os demais endpoints da API. Esse <b>token</b> é uma
+      chave de acesso <b>JWT</b> que deverá ser requerida através de um
+      endpoint, informando as credenciais de acesso do usuário. Havendo sucesso
+      na requisição, é gerado então o “<b><i>token de acesso</b></i>”, retornado
+      no body da resposta da requisição, conforme especificação do protocolo
+      <b><i>OpenID Connect</b></i>.
+
+
+      <b>Passo 1:</b>
+
+
+      Para obter o <b>token de acesso (JWT)</b>, o consumidor/cliente deve fazer
+      uma requisição <b>POST</b> para a <b>URL</b> correspondente ao ambiente
+      que deseja acessar:
+
+
+      <table>
+          <tr>
+              <td><b>Ambiente</b></td>
+              <td><b>URL</b></td>
+          </tr>
+          <tr>
+              <td>Playground</td>
+              <td>https://account-play.plataformaidt.com.br/realms/iDtrust/protocol/openid-connect/token/</td>
+          </tr>
+          <tr>
+              <td>Produção</td>
+              <td>https://accounts.plataformaidt.io/auth/realms/finanfor/protocol/openid-connect/token/</td>
+          </tr>
+      </table>
+
+
+      Parâmetros necessários para a requisição do token:
+
+      <br></br><br></br>
+
+      <b>Parâmetros do Header para requisição POST</b>
+
+
+      <table>
+          <tr>
+              <td><b>Variavél</b></td>
+              <td><b>Descrição</b></td>
+          </tr>
+          <tr>
+              <td>ContentType</td>
+              <td>Tipo do conteúdo da requisição que está sendo enviada. Nesta requisição deve ser enviada como um formulário</td>
+          </tr>
+      </table>
+
+
+      <b>Exemplo de header</b>
+
+
+      <pre>
+          <code> Content-Type: application/x-www-form-urlencoded </code>
+      </pre>
+
+
+      <br></br>
+
+
+      <pre>
+
+      <b>Parâmetros do Body para requisição POST</b>
+
+      </pre>
+
+
+      <table>
+          <tr>
+              <td><b>Variavél</b></td>
+              <td><b>Descrição</b></td>
+          </tr>
+          <tr>
+              <td>grant_type</td>
+              <td>Especifica para o provedor o tipo de autorização. Para esta requisição será utilizado <b><i>password</i></b></td>
+          </tr>
+          <tr>
+              <td>username</td>
+              <td>Nome do usuário que deseja requisitar o token</td>
+          </tr>
+          <tr>
+              <td>password</td>
+              <td>Senha do usuário que deseja requisitar o token</td>
+          </tr>
+          <tr>
+              <td>client_id</td>
+              <td>Utilize <b><i>mutant-public</b></i>.</td>
+          </tr>
+      </table>
+
+
+      <br></br>
+
+      <b>Exemplo de query</b>
+
+
+      <pre>
+          <code>
+              curl --location --request POST ''https://account-play.plataformaidt.com.br/realms/iDtrust/protocol/openid-connect/token'' \
+              --header ''Content-Type: application/x-www-form-urlencoded'' \
+              --data-urlencode ''grant_type=password'' \
+              --data-urlencode ''username=usuario_da_api@plataformaidt.com.br'' \
+              --data-urlencode ''password=minha_senha'' \
+              --data-urlencode ''client_id=mutant-public''
+          </code>
+      </pre>
+
+
+      <b>Exemplo de retorno da API (statusCode 200)</b>
+
+
+      <pre>
+          <code>
+              {
+                  "access_token":
+                  "abcdefghijlnmopqrstuvxwykz0123456789",
+                  "expires_in": 3600,
+                  "refresh_expires_in": 1800,
+                  "refresh_token":
+                  "abcdefghijlnmopqrstuvxwykz0123456789",
+                  "token_type": "Bearer",
+                  "not-before-policy": 1683827720,
+                  "session_state": "75a5b179-5a53-4852-8460-31f5af223bc5",
+                  "scope": "email profile"
+              }
+          </code>
+      </pre>
+
+
+      <b>Passo 2:</b>
+
+
+      De posse das informações do <b><i>json</b></i> anterior com o <b><i>token
+      de acesso (“access_token”)</b></i>, a aplicação consumidora estará
+      habilitada para consultar dados de recursos protegidos, que são as
+      informações e métodos de acesso do usuário a <i>API Plataforma IDT</i>.
+
+
+      <br><b>Exemplo de acesso a recursos protegidos do sistema</b>
+
+
+      Como exemplo vamos realizar uma busca por todos os movimentos de um
+      programa de crédito. Para isso será utilizado o recurso <i>"Buscar
+      Movimentos"</i>, onde deverá ser feita uma requisição <b>GET</b> para o
+      endereço "<b>https://api.play.plataformaidt.com.br/v1/movements</b>".
+
+
+      <b>Parâmetros do Header para requisição GET</b>
+
+
+      <table>
+          <tr>
+              <td><b>Variavél</b></td>
+              <td><b>Descrição</b></td>
+          </tr>
+          <tr>
+              <td>Authorization</td>
+              <td>Palavra <b>Bearer</b> e o <b>ACCESS_TOKEN</b> da requisição</td>
+          </tr>
+          <tr>
+              <td>origin</td>
+              <td>URL do programa do crédito</td>
+          </tr>
+      </table>
+
+
+      <b>Exemplo de header</b>
+
+
+      <pre>
+          <code>
+              Authorization:Bearer < access_token ><br>
+              origin:https://empresaexemplo.finan4.net
+          </code>
+      </pre>
+
+
+      <b>Exemplo de query</b>
+
+
+      <pre>
+          <code>
+              curl --location --request GET ''https://api.play.plataformaidt.com.br/v1/movements/assets?page=0&size=50&start_date=2020-01-01&end_date=2021-12-10'' \
+              --header ''origin: https://empresaexemplo.finan4.net'' \
+              --header ''Authorization: Bearer < access_token >''
+          </code>
+      </pre>
+
+
+      <b>IMPORTANTE: Todos os endpoints e requisições desta API possuem como
+      requisito o envio do parâmetro "<i>origin</i>" (URL do programa do
+      crédito) no header da requisição.</b>
+  - name: Criar movimento
+  - name: Buscar movimento
+  - name: Filtrar movimento
+  - name: Buscar movimento relacionado
+  - name: Aprovar ou reprovar um movimento
+  - name: Atualizar movimento
+  - name: Lote de Movimentos
+    description: >-
+      Os lotes de movimentos permitem agrupar de maneira assíncrona múltiplos
+      ativos de lastro financeiro (*assets*) dentro de uma única negociação
+      (*trade*).
+
+
+      A criação e efetivação desta negociação ocorre em 3 etapas consecutivas:
+
+
+      1. **Abertura do lote (`POST /draft_movements/trade`):** Cria um novo
+      lote. Funciona como um "envelope" lógico que receberá e armazenará os
+      títulos que serão negociados.
+
+
+      2. **Adição de itens ao lote (`PUT
+      /draft_movements/trade/{uuid_identificador_do_lote}/children`):** Anexa
+      uma lista de ativos ao lote criado. Pode ser usado de maneira incremental
+      múltiplas vezes enquanto o lote estiver aberto.
+
+
+      3. **Finalização do lote (`PUT /draft_movements/trade`):** Fecha o lote em
+      aberto e dispara seu processamento com todos os títulos anexados até o
+      momento.
+
+
+      **Observação**: Assim como no uso dos demais endpoints da API da
+      Plataforma IDT, todas as requisições deste fluxo exigem autenticação
+      prévia e envio obrigatório das seguintes informações no header das
+      requisições:
+
+
+      * `Authorization`: `Bearer {token}` (Token JWT obtido no endpoint de
+      login).
+
+
+      * `Origin`: URL identificadora do programa (Ex:
+      `https://nome_do_programa.play.plataformaidt.com.br` para ambiente de
+      playground ou `https://nome_do_programa.plataformaidt.io` para ambiente de
+      produção).
+
+
+      Para mais detalhes sobre a geração de credenciais, consultar a seção
+      Authentication.
+  - name: Buscar usuários relacionados
+  - name: Criar usuários
+  - name: Atualizar usuário
+  - name: Enviar convite para novos participantes
+  - name: Consultar Cadastro
+  - name: Enviar Opt-in
+  - name: Enviar Opt-out
+  - name: Webhook/Callback
+  - name: Agenda e Contrato
